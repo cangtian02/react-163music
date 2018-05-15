@@ -1,0 +1,6 @@
+.nav{display: flex;height: 2.5rem;line-height: 2.5rem;}
+    .nav .iconfont{font-size: 1.2rem;}
+    .nav .l, .nav .r{width: 2.4rem;text-align: center;color: #fff;}
+    .nav .c{flex: 1;text-align: center;}
+    .nav .c a{display: inline-block;width: 2.8rem;color: #EB8D88;}
+    .nav .c a.active{color: #fff;}
