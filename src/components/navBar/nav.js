@@ -5,7 +5,7 @@ import './nav.css';
 class Nav extends React.Component {
     render() {
         return (
-            <div className="nav bgred">
+            <div className="m-nav bgred">
                 <div className="l">
                     <i className="iconfont icon-nav"></i>
                 </div>

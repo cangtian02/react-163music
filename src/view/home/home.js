@@ -2,6 +2,8 @@ import React from 'react';
 import fetch from '../../common/fetch';
 import Nav from '../../components/navBar/nav';
 import Slide from '../../components/slide/slide';
+import SubNav from './subNav/subNav';
+import Title from '../../components/title/title';
 
 class Home extends React.Component {
 
@@ -15,6 +17,7 @@ class Home extends React.Component {
     componentDidMount() {
         setTimeout(() => {
             this.getBanner();
+            this.getPlayList();
         }, 20);
     }
 
@@ -31,12 +34,21 @@ class Home extends React.Component {
         });
     }
 
+    getPlayList() {
+        fetch('personalized').then(res => {
+            if (res.code !== 200) return alert('banner api error');
+            console.log(res)
+        });
+    }
+
     render() {
         return (
             <div className="warp">
                 <Nav />
                 <div className="content home">
                     <Slide data={this.state.banner} />
+                    <SubNav />
+                    <Title title='推荐歌单' />
                 </div>
             </div>
         );

@@ -25,6 +25,9 @@ a,a:active{text-decoration: none;color: #fff;}
 .clearfix:after{clear: both;}
 
 .app, .warp, .content{position: absolute;left: 0;top: 0;bottom: 0;right: 0;}
-.nav ~ .content{top: 2.5rem;}
+.m-nav ~ .content{top: 2.5rem;}
 .app, .warp{overflow: hidden;}
 .content{overflow-y: auto;-webkit-overflow-scrolling:touch;}
+
+.borderBot{position: relative;}
+	.borderBot::after{content: '';position: absolute;left: 0;right: 0;bottom: 0;height: 1px;background: #E8EAEB;transform: scaleY(.5);transform-origin:0 0;}
