@@ -1,7 +1,7 @@
-.m-subnav{display: flex;padding: .75rem 0;}
-    .m-subnav a{flex: 1;font-size: .7rem;color: #343434;text-align: center;}
-    .m-subnav a i{display: block;margin: 0 auto .25rem auto;width: 2.5rem;height: 2.5rem;background: url(../../../assets/img/sub_nav.png) no-repeat;background-size: 10rem 2.5rem;}
-    .m-subnav a i.icon_1{background-position: 0 0;}
-    .m-subnav a i.icon_2{background-position: -2.5rem 0;}
-    .m-subnav a i.icon_3{background-position: -5rem 0;}
-    .m-subnav a i.icon_4{background-position: -7.5rem 0;}
+.m-home-subnav{display: flex;padding: .75rem 0;}
+    .m-home-subnav li{flex: 1;font-size: .7rem;color: #343434;text-align: center;}
+    .m-home-subnav li i{display: block;margin: 0 auto .25rem auto;width: 2.5rem;height: 2.5rem;background: url(../../../assets/img/sub_nav.png) no-repeat;background-size: 10rem 2.5rem;}
+    .m-home-subnav li i.icon_1{background-position: 0 0;}
+    .m-home-subnav li i.icon_2{background-position: -2.5rem 0;}
+    .m-home-subnav li i.icon_3{background-position: -5rem 0;}
+    .m-home-subnav li i.icon_4{background-position: -7.5rem 0;}

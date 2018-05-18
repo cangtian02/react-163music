@@ -26,6 +26,8 @@ a,a:active{text-decoration: none;color: #fff;}
 
 .bgred{background: #E4463B;}
 
+.lazyload-placeholder{background: rgba(232, 234, 235, 1);border-radius: .25rem;}
+
 .clearfix:before,.clearfix:after{content: " ";display: table;}
 .clearfix:after{clear: both;}
 

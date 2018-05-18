@@ -3,29 +3,39 @@ import { Route } from 'react-router-dom';
 import Loadable from 'react-loadable';
 import Loading from '../components/loading/loading';
 
+const LoadingComponents = ({ isLoading, error }) => {
+    if (isLoading) {
+        return <Loading />;
+    } else if (error) {
+        return <div>啊哦，页面加载错误。。。</div>;
+    } else {
+        return null;
+    }
+};
+
 const Home = Loadable({
     loader: () => import('../view/home/home'),
-    loading: Loading
+    loading: LoadingComponents
 });
 
 const Playlist = Loadable({
     loader: () => import('../view/playlist/playlist'),
-    loading: Loading
+    loading: LoadingComponents
 });
 
 const PlaylistDetail = Loadable({
     loader: () => import('../view/listdetail/listdetail'),
-    loading: Loading
+    loading: LoadingComponents
 });
 
 const Toplist = Loadable({
     loader: () => import('../view/toplist/toplist'),
-    loading: Loading
+    loading: LoadingComponents
 });
 
 const Search = Loadable({
     loader: () => import('../view/search/search'),
-    loading: Loading
+    loading: LoadingComponents
 });
 
 export const routes = [

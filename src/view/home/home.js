@@ -45,7 +45,7 @@ class Home extends React.Component {
         return (
             <div className="warp">
                 <Nav />
-                <div className="content home">
+                <div className="content m-home" id="content">
                     <Slide data={this.state.banner} />
                     <SubNav />
                     <Title title='推荐歌单' />

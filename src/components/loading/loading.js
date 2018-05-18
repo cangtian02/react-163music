@@ -1,14 +1,11 @@
 import React from 'react';
+import './loading.css';
 
-const LoadingComponent = ({ isLoading, error }) => {
-    if (isLoading) {
-        return <div>Loading...</div>;
-    } else if (error) {
-        return <div>Sorry, there was a problem loading the page.</div>;
-    }
-    else {
-        return null;
-    }
-};
+const Loading = () => {
+    return (<div className="m-loading">
+                <em><i></i><i></i><i></i><i></i></em>
+                <span>努力加载中...</span>
+            </div>);
+}
 
-export default LoadingComponent;
+export default Loading;

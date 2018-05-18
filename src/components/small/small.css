@@ -1,4 +1,4 @@
 .m-title{padding-left: .3rem;line-height: 2.4rem;font-size: .8rem;color: #343434;}
     .m-title span{font-weight: 600;}
 
-.m-playCount{font-size: .6rem;color: #fff;line-height: .7rem;}
+.m-playCount{font-size: .6rem;color: #fff;line-height: .9rem;text-align: right;padding-right: .25rem;padding-bottom: .25rem;background: linear-gradient(180deg, rgba(0, 0, 0, .2), rgba(0, 0, 0, .1) 50%, rgba(0, 0, 0, 0));position: absolute;left: 0;right: 0;top: 0;border-radius: .25rem;}
