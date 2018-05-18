@@ -1,26 +1,31 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
 import Loadable from 'react-loadable';
-import LoadingComponent from '../components/loadingComponent/loadingComponent';
+import Loading from '../components/loading/loading';
 
 const Home = Loadable({
     loader: () => import('../view/home/home'),
-    loading: LoadingComponent
+    loading: Loading
 });
 
 const Playlist = Loadable({
     loader: () => import('../view/playlist/playlist'),
-    loading: LoadingComponent
+    loading: Loading
+});
+
+const PlaylistDetail = Loadable({
+    loader: () => import('../view/listdetail/listdetail'),
+    loading: Loading
 });
 
 const Toplist = Loadable({
     loader: () => import('../view/toplist/toplist'),
-    loading: LoadingComponent
+    loading: Loading
 });
 
 const Search = Loadable({
     loader: () => import('../view/search/search'),
-    loading: LoadingComponent
+    loading: Loading
 });
 
 export const routes = [
@@ -35,6 +40,10 @@ export const routes = [
     {
         path: '/playlist',
         component: Playlist
+    },
+    {
+        path: '/listdetail/:id',
+        component: PlaylistDetail
     },
     {
         path: '/search',

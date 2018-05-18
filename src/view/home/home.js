@@ -1,29 +1,28 @@
 import React from 'react';
 import fetch from '../../common/fetch';
-import Nav from '../../components/navBar/nav';
+import Nav from '../../components/nav/nav';
 import Slide from '../../components/slide/slide';
 import SubNav from './subNav/subNav';
-import Title from '../../components/title/title';
+import { Title } from '../../components/small/small';
+import List from './list/list';
 
 class Home extends React.Component {
 
     constructor() {
         super();
         this.state = {
-            banner: []
+            banner: [],
+            personalized: []
         }
     }
 
     componentDidMount() {
-        setTimeout(() => {
-            this.getBanner();
-            this.getPlayList();
-        }, 20);
+        this.getBanner();
+        this.getPlayList();
     }
 
     getBanner() {
         fetch('banner').then(res => {
-            if (res.code !== 200) return alert('banner api error');
             let arr = [];
             res.banners.forEach(val => {
                 arr.push(val.picUrl);
@@ -36,8 +35,9 @@ class Home extends React.Component {
 
     getPlayList() {
         fetch('personalized').then(res => {
-            if (res.code !== 200) return alert('banner api error');
-            console.log(res)
+            this.setState({
+                personalized: res.result
+            });
         });
     }
 
@@ -49,6 +49,7 @@ class Home extends React.Component {
                     <Slide data={this.state.banner} />
                     <SubNav />
                     <Title title='推荐歌单' />
+                    <List data={this.state.personalized} />
                 </div>
             </div>
         );

@@ -16,18 +16,20 @@ html, body{height: 100%;position: relative;}
 
 ul,li{list-style-type: none;}
 i,em{font-style: normal;}
-input[type="tel"],input[type="text"],select,textarea{outline: none;border: none;}
+input{outline: none;border: none;}
 a,a:active{text-decoration: none;color: #fff;}
+
+.app, .warp, .content{position: absolute;left: 0;top: 0;bottom: 0;right: 0;}
+.content-header ~ .content{top: 2.5rem;}
+.app, .warp{overflow: hidden;}
+.content{overflow-y: auto;overflow-x: hidden;-webkit-overflow-scrolling:touch;}
 
 .bgred{background: #E4463B;}
 
 .clearfix:before,.clearfix:after{content: " ";display: table;}
 .clearfix:after{clear: both;}
 
-.app, .warp, .content{position: absolute;left: 0;top: 0;bottom: 0;right: 0;}
-.m-nav ~ .content{top: 2.5rem;}
-.app, .warp{overflow: hidden;}
-.content{overflow-y: auto;-webkit-overflow-scrolling:touch;}
-
 .borderBot{position: relative;}
 	.borderBot::after{content: '';position: absolute;left: 0;right: 0;bottom: 0;height: 1px;background: #E8EAEB;transform: scaleY(.5);transform-origin:0 0;}
+
+.clamp2{overflow : hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical;}

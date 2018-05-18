@@ -55,6 +55,9 @@ class Slide extends React.Component {
     }
 
     initSlide() {
+        if (this.slide) this.slide.destroy(); this.slide = null;
+        if (this.timer) clearTimeout(this.timer);
+
         this.slide = new BScroll(this.refs.slide, {
             scrollX: true,
             scrollY: false,

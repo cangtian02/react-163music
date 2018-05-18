@@ -19,6 +19,7 @@ let fetch = (url, data) => {
             }
 
             ajax(api_url + url, obj).then(res => res.json()).then(res => {
+                if (res.code !== 200) return console.log(url + ' api error');
                 resolve(res);
             }).catch(error => {
                 console.log('fetch post: +++  ' + error);
@@ -26,6 +27,7 @@ let fetch = (url, data) => {
             });
         } else {
             ajax(api_url + url).then(res => res.json()).then(res => {
+                if (res.code !== 200) return console.log(url + ' api error');
                 resolve(res);
             }).catch(error => {
                 console.log('fetch get: +++  ' + error);

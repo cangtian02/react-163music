@@ -1,0 +1,6 @@
+.m-list{display: flex;flex-wrap: wrap;margin: 0 .2rem;}
+    .m-list li{width: 33.3333%;padding: 0 .1rem;margin-bottom: .6rem;position: relative;}
+    .m-list li a{display: block;color: #343434;}
+    .m-list li img{display: block;width: 100%;border-radius: .25rem;}
+    .m-list li p{padding: 0 .1rem;height: 1.8rem;line-height: .9rem;font-size: .6rem;}
+    .m-list .m-playCount{position: absolute;right: .3rem;top: .1rem;}

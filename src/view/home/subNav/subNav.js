@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import './subNav.css';
 
 class SubNav extends React.Component {
-
     render() {
         return (
             <div className="m-subnav borderBot">
