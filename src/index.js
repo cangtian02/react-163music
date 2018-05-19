@@ -7,6 +7,7 @@ import { createStore } from 'redux';
 import rootReducer from './redux/reducers/index';
 import './assets/reset.css';
 import './assets/fonts/iconfont.css';
+import Play from './view/play/play';
 
 const store = createStore(rootReducer);
 
@@ -14,6 +15,7 @@ render((
     <Provider store={store}>
         <Router>
             <div className="app">
+                <Play />
                 <Route exact path="/" render={() => (<Redirect exact from="/" to="/home" />)} />
                 {routes.map((route, i) => (
                     <RouteWithSubRoutes key={i} {...route} />

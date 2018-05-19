@@ -1,5 +1,5 @@
 import React from 'react';
-import fetch from '../../common/fetch';
+import { banner, personalized } from '../../common/api';
 import Nav from '../../components/nav/nav';
 import Slide from '../../components/slide/slide';
 import SubNav from './subNav/subNav';
@@ -18,11 +18,11 @@ class Home extends React.Component {
 
     componentDidMount() {
         this.getBanner();
-        this.getPlayList();
+        this.getPersonalized();
     }
 
     getBanner() {
-        fetch('banner').then(res => {
+        banner().then(res => {
             let arr = [];
             res.banners.forEach(val => {
                 arr.push(val.picUrl);
@@ -33,8 +33,8 @@ class Home extends React.Component {
         });
     }
 
-    getPlayList() {
-        fetch('personalized').then(res => {
+    getPersonalized() {
+        personalized().then(res => {
             this.setState({
                 personalized: res.result
             });

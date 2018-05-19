@@ -11,7 +11,7 @@ export function Title(props) {
 
 export function PlayCount(props) {
     let num = props.num;
-    num = num >= 100000000 ? (num / 100000000).toFixed(2) + '亿' : num >= 100000 ? Math.floor(num / 10000) + '万' : num;
+    num = isNaN(num) ? 0 : num >= 100000000 ? (num / 100000000).toFixed(2) + '亿' : num >= 100000 ? Math.floor(num / 10000).toFixed(0) + '万' : num.toFixed(0);
     return (
         <div className="m-playCount">
             <i className="iconfont icon-erji"></i>&nbsp;<span>{num}</span>

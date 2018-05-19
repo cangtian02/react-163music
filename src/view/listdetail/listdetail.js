@@ -1,5 +1,6 @@
 import React from 'react';
-import fetch from '../../common/fetch';
+import { artists } from '../../common/utils';
+import { playlistDetail } from '../../common/api';
 import Header from './header/header';
 import Detail from './detail/detail';
 import List from './list/list';
@@ -11,7 +12,8 @@ class ListDetail extends React.Component {
         super();
         this.state = {
             datail: '',
-            list: []
+            list: [],
+            playListId: 0
         }
     }
 
@@ -20,19 +22,33 @@ class ListDetail extends React.Component {
     }
 
     getDetail() {
-        fetch('playlist/detail?id=' + this.props.match.params.id).then(res => {
+        playlistDetail(this.props.match.params.id).then(res => {
             res = res.result;
             // console.log(res);
+
+            let datail = {
+                name: res.name,
+                pic: res.coverImgUrl,
+                playCount: res.playCount,
+                creator_name: res.creator.nickname,
+                creator_pic: res.creator.backgroundUrl,
+                tags: res.tags.join('/')
+            };
+            
+            let list = [];
+            res.tracks.forEach(val => {
+                list.push({
+                    id: val.id,
+                    name: val.name,
+                    pic: val.album.picUrl,
+                    artists: artists(val.artists)
+                });
+            });
+
             this.setState({
-                datail: {
-                    name: res.name,
-                    pic: res.coverImgUrl,
-                    playCount: res.playCount,
-                    creator_name: res.creator.nickname,
-                    creator_pic: res.creator.backgroundUrl,
-                    tags: res.tags.join('/')
-                },
-                list: res.tracks
+                playListId: res.id,
+                datail: datail,
+                list: list
             });
         });
     }
@@ -44,7 +60,7 @@ class ListDetail extends React.Component {
                 <div className="content m-ld">
                     <div className="m-ld_bg"><img src={this.state.datail.pic} alt={this.state.datail.name} /></div>
                     <Detail datail={this.state.datail} />
-                    <List data={this.state.list} />
+                    <List list={this.state.list} playListId={this.state.playListId} />
                 </div>
             </div>
         );
