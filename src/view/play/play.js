@@ -30,6 +30,9 @@ class Play extends React.Component {
             playListId: 0,  // 歌单id
             paused: true,  // 播放状态 true播放  false暂停
             order: 0,  // 播放顺序 0列表循环 1随机播放 2单曲循环
+            showViewCtrl: false,  // 显示播放控制页面
+            duration: 0,  // 歌曲时长单位s
+            currentTime: 0, // 歌曲当前播放时长单位s
         }
     }
 
@@ -70,18 +73,56 @@ class Play extends React.Component {
     audioInit() {
         this.setStatePaused(false);
 
+        // 当音乐可以播放时
         this.audio().addEventListener('canplay', () => {
-            this.audio().play();
-            this.setStatePaused(true);
+            this.audioCanplay();
         }, false);
 
+        // 当音乐加载错误时
         this.audio().addEventListener('error', () => {
             alert('歌曲加载错误');
         }, false);
 
+        // 当音乐暂停时
+        this.audio().addEventListener('pause', () => {
+            this.audioPaused(0);
+        }, false);
+
+        // 当音乐播放时
+        this.audio().addEventListener('play', () => {
+            this.audioPaused(1);
+        }, false);
+
+        // 当音乐停止时
         this.audio().addEventListener('ended', () => {
             this.audioSwitch(0);
         }, false);
+    }
+
+    // 歌曲可以播放后处理相关
+    audioCanplay() {
+        this.audio().play();
+        this.setStatePaused(true);
+        this.setState({ 
+            currentTime: this.audio().currentTime,
+            duration: this.audio().duration
+        });
+    }
+
+    /**
+     * 监控歌曲播放状态
+     * @param {number} f 0暂停 1播放
+     */
+    audioPaused(f) {
+        clearInterval(this.currentTimer);
+        if (f === 1) {
+            this.currentTimer = null;
+            this.currentTimer = setInterval(() => {
+                this.setState({
+                    currentTime: this.state.currentTime + 1
+                });
+            }, 1000);
+        }
     }
 
     /**
@@ -89,6 +130,9 @@ class Play extends React.Component {
      * @param {number} f 0 歌曲播放完毕 1上一曲 2下一曲 
      */
     audioSwitch(f) {
+        // 切换前先暂停播放条的定时器
+        clearInterval(this.currentTimer);
+
         const { setCurrentPlayIndex } = this.props;
 
         // 列表循环
@@ -136,9 +180,25 @@ class Play extends React.Component {
         this.setState({ order: order });
     }
 
+    /**
+     * 设置播放位置
+     * @param {number} t 播放位置单位s 
+     */
+    handleCurrentTime(t) {
+        this.audio().currentTime = t;
+        this.setState({
+            currentTime: t
+        });
+    }
+
     // 设置播放状态  播放or暂停
     setStatePaused(f) {
         this.setState({ paused: f });
+    }
+
+    // 设置是否显示控制页面
+    setStateShowViewCtrl(f) {
+        this.setState({ showViewCtrl: f });
     }
 
     render() {
@@ -153,7 +213,8 @@ class Play extends React.Component {
                     <BotCtrl 
                         playItem={playItem} 
                         paused={this.state.paused} 
-                        handlePaused={() => { this.handlePaused()}} 
+                        handlePaused={() => { this.handlePaused() }} 
+                        handleShowViewCtrl={() => { this.setStateShowViewCtrl(true) }} 
                     />
                     <ViewCtrl 
                         playItem={playItem} 
@@ -162,7 +223,12 @@ class Play extends React.Component {
                         order={this.state.order} 
                         handleOrder={() => { this.handleOrder() }}
                         handlePrev={() => { this.audioSwitch(1) }} 
-                        handleNext={() => { this.audioSwitch(2) }}
+                        handleNext={() => { this.audioSwitch(2) }} 
+                        showViewCtrl={this.state.showViewCtrl} 
+                        handleShowViewCtrl={() => { this.setStateShowViewCtrl(false) }} 
+                        duration={this.state.duration} 
+                        currentTime={this.state.currentTime} 
+                        handleCurrentTime={(t) => {this.handleCurrentTime(t) }}
                     />
                 </div>
             );

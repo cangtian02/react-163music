@@ -24,3 +24,16 @@ export function getRandom(num, maxNum) {
         return n;
     }
 }
+
+/**
+ * 处理时间展示
+ * @param {number} d 时间秒数 
+ */
+export function filterTime(d) {
+    let h = d > 3600 ? Math.floor(d / 3600) : 0;
+    let b = Math.floor((d - h * 3600) / 60);
+    let s = Math.floor(d - h * 3600 - b * 60);
+    b = b < 10 ? '0' + b : b;
+    s = s < 10 ? '0' + s : s;
+    return h > 0 ? h + ':' + b + ':' + s : b + ':' + s;
+}
