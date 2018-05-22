@@ -2,8 +2,8 @@ import es6promise from 'es6-promise';
 import ajax from 'isomorphic-fetch';
 es6promise.polyfill();
 
-// const api_url = 'http://192.168.2.26:3010/';
-const api_url = 'http://111.231.93.106:9999/';
+const api_url = 'http://192.168.2.26:3010/';
+// const api_url = 'http://111.231.93.106:9999/';
 
 let fetch = (url, data) => {
     return new Promise((resolve, reject) => {

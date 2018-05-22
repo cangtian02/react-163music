@@ -1,6 +1,6 @@
 *{margin: 0;padding: 0;box-sizing: border-box;-webkit-tap-highlight-color: rgba(0, 0, 0, 0);-webkit-touch-callout: none;}
 
-html{font-size: 20px;font-family: sans-serif,"Microsoft YaHei",微软雅黑;}
+html{font-size: 20px;font-family: sans-serif,"Microsoft YaHei",微软雅黑;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;}
 body{background: #F2F4F5;font-size: .7rem;color: #343434;}
 html, body{height: 100%;position: relative;}
 
@@ -22,7 +22,7 @@ a,a:active{text-decoration: none;color: #fff;}
 .app, .warp, .content{position: absolute;left: 0;top: 0;bottom: 0;right: 0;z-index: 1;}
 .content-header ~ .content{top: 2.5rem;}
 .app, .warp{overflow: hidden;}
-.content{overflow-y: auto;overflow-x: hidden;-webkit-overflow-scrolling:touch;}
+.content{overflow: auto;-webkit-overflow-scrolling:touch;}
 .m-playCtrl ~ .warp{bottom: 2.5rem;}
 
 .bgred{background: #E4463B;}
