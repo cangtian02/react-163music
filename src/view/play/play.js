@@ -95,6 +95,12 @@ class Play extends React.Component {
             this.audioCanplay();
         }, false);
 
+        this.audio().addEventListener('durationchange', () => {
+            this.setState({
+                duration: this.audio().duration
+            });
+        }, false);
+
         // 当音乐加载错误时
         this.audio().addEventListener('error', () => {
             alert('歌曲加载错误');
