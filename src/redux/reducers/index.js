@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import { SET_PLAYLISTID, SET_PLAYLIST, SET_CURRENTPLAYINDEX } from './../actions/index';
+import { SET_PLAYLISTID, SET_PLAYLIST, SET_CURRENTPLAYINDEX, SET_CURRENTPLAYID } from './../actions/index';
 
 const playListId = (state = [], action) => {
     switch (action.type) {
@@ -28,8 +28,18 @@ const currentPlayIndex = (state = -1, action) => {
     }
 };
 
+const currentPlayId = (state = -1, action) => {
+    switch (action.type) {
+        case SET_CURRENTPLAYID:
+            return action.currentPlayId;
+        default:
+            return state;
+    }
+};
+
 export default combineReducers({
     playListId,
     playList,
-    currentPlayIndex
+    currentPlayIndex,
+    currentPlayId
 });

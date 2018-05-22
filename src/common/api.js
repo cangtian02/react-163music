@@ -45,3 +45,15 @@ export function musicUrl(id) {
         });
     });
 }
+
+/**
+ * 歌词
+ * @param {number} id 歌曲id
+ */
+export function musicLyric(id) {
+    return new Promise((resolve, reject) => {
+        fetch('lyric?id=' + id).then(res => {
+            resolve(res);
+        });
+    });
+}

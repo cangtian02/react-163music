@@ -2,27 +2,31 @@ import React from 'react';
 import Loading from '../../../components/loading/loading';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { setPlayListId, setPlayList, setCurrentPlayIndex } from '../../../redux/actions/index';
+import { setPlayListId, setPlayList, setCurrentPlayIndex, setCurrentPlayId } from '../../../redux/actions/index';
 import './list.css';
 
 const mapStateToProps = state => {
-    return { currentPlayIndex: state.currentPlayIndex };
+    return { 
+        currentPlayIndex: state.currentPlayIndex,
+        currentPlayId: state.currentPlayId
+    };
 }
 
 const mapDispatchToProps = dispatch => {
     return bindActionCreators({
         setPlayListId,
         setPlayList,
-        setCurrentPlayIndex
+        setCurrentPlayIndex,
+        setCurrentPlayId
     }, dispatch);
 }
 
 function Item(props) {
     let dom = [];
     props.list.forEach((val, i) => {
-        dom.push(<li key={i} onClick={() => { props.onClick(i) }} className={props.currentPlayIndex === i ? 'active': ''}>
+        dom.push(<li key={i} onClick={() => { props.onClick(i) }} className={props.currentPlayId === val.id ? 'active': ''}>
             <div className="l">
-                {props.currentPlayIndex === i ? <i className="iconfont icon-icon-5"></i> : i + 1}
+                {props.currentPlayId === val.id ? <i className="iconfont icon-icon-5"></i> : i + 1}
             </div>
             <div className="r borderBot">
                 <p className="ellipsis">{val.name}</p>
@@ -36,14 +40,14 @@ function Item(props) {
 class List extends React.Component {
 
     handleClick(i) {
-        const { setPlayListId, setPlayList, setCurrentPlayIndex } = this.props;
+        const { setPlayListId, setPlayList, setCurrentPlayIndex, setCurrentPlayId } = this.props;
         setPlayListId(this.props.playListId);
         setPlayList(this.props.list);
         setCurrentPlayIndex(i);
+        setCurrentPlayId(this.props.list[i].id);
     }
 
     render() {
-        // console.log(this.props)
         let loading = '';
         if (this.props.list.length === 0) loading = <Loading />;
         return (
@@ -54,7 +58,7 @@ class List extends React.Component {
                 </div>
                 <ul className="m-ld-list_list">
                     {loading}
-                    <Item list={this.props.list} currentPlayIndex={this.props.currentPlayIndex} onClick={(i) => { this.handleClick(i)}} />
+                    <Item list={this.props.list} currentPlayId={this.props.currentPlayId} onClick={(i) => { this.handleClick(i)}} />
                 </ul>
             </div>
         );

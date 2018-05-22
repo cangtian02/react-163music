@@ -23,7 +23,7 @@ a,a:active{text-decoration: none;color: #fff;}
 .content-header ~ .content{top: 2.5rem;}
 .app, .warp{overflow: hidden;}
 .content{overflow-y: auto;overflow-x: hidden;-webkit-overflow-scrolling:touch;}
-.playCtrl ~ .warp{bottom: 2.5rem;}
+.m-playCtrl ~ .warp{bottom: 2.5rem;}
 
 .bgred{background: #E4463B;}
 
