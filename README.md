@@ -1,5 +1,5 @@
 ## 仿照网易云音乐客户端，采用react开发的一款音乐播放器
 
-### [--->demo](http://musci.ct9001.com).
+### [--->demo](http://music.ct9001.com).
 
 持续开发中。。。。。
