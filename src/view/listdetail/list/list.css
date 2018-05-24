@@ -10,5 +10,5 @@
     .m-ld-list_list li.active .l .iconfont{font-size: 1rem;}
     .m-ld-list_list li .l{width: 3rem;line-height: 3rem;text-align: center;color: #909192;}
     .m-ld-list_list li .r{flex: 1;padding: .5rem 0;overflow: hidden;}
-    .m-ld-list_list li .r p{height: 1rem;line-height: .9rem;font-size: .8rem;margin-bottom: .3rem;}
+    .m-ld-list_list li .r p{line-height: .9rem;font-size: .8rem;margin-bottom: .3rem;}
     .m-ld-list_list li .r span{color: #98999A;line-height: .7rem;}

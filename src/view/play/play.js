@@ -81,6 +81,7 @@ class Play extends React.Component {
     // 获取歌词
     getMusicLyric() {
         musicLyric(this.props.playList[this.props.currentPlayIndex].id).then(res => {
+            if (res.lrc === undefined || res.lrc.lyric === undefined) return;
             this.setState({
                 lyric: parseLyric(res.lrc.lyric)
             });

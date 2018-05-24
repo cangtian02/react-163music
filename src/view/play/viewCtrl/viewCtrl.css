@@ -14,7 +14,7 @@
     .m-viewCtrl_header .l{width: 3rem;text-align: center;line-height: 2.5rem;color: #fff;}
     .m-viewCtrl_header .l .iconfont{font-size: 1.2rem;}
     .m-viewCtrl_header .r{flex: 1;padding: .25rem 0;overflow: hidden;}
-    .m-viewCtrl_header .r p{color: #fff;font-size: .8rem;line-height: 1rem;}
+    .m-viewCtrl_header .r p{color: #fff;font-size: .8rem;line-height: 1.1rem;}
     .m-viewCtrl_header .r span{font-size: .6rem;color: #D1CEBF;}
 
 .m-viewCtrl_warp{top: 2.5rem;bottom: 6rem;}
@@ -33,7 +33,7 @@
 
 .m-viewCtrl_lyric{position: absolute;left: 0;top: 0;right: 0;bottom: 0;overflow-x: hidden;overflow-y: auto;-webkit-overflow-scrolling:touch;}
     .m-viewCtrl_lyric ul{position: absolute;left: 0;right: 0;top: 41%;transition: transform .3s ease-out;transform-origin: 0 0 0;}
-    .m-viewCtrl_lyric ul li{text-align: center;line-height: 32px;color: #D1CEBF;}
+    .m-viewCtrl_lyric ul li{text-align: center;line-height: 40px;color: #D1CEBF;}
     .m-viewCtrl_lyric ul .active{color: #fff;}
 
 .m-viewCtrl_time{display: flex;height: 2rem;bottom: 4rem;}

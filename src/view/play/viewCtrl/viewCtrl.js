@@ -10,7 +10,7 @@ function CtrlHeader(props) {
             </div>
             <div className="r">
                 <p className="ellipsis">{props.data.name}</p>
-                <span>{props.data.artists}</span>
+                <span className="ellipsis">{props.data.artists}</span>
             </div>
         </div>
     );
@@ -45,7 +45,8 @@ function CtrlLyric(props) {
         });
     }
 
-    let ulStyle = { transform: 'translateY(-' + (currentIndex * 32) + 'px)' };
+    // 此处的40为歌词li标签的行高
+    let ulStyle = { transform: 'translateY(-' + (currentIndex * 40) + 'px)' };
 
     // 监听dom滚动事件，使用函数节流，只在最后一次捕获后2000ms才执行此函数
     function onScroll() {

@@ -29,7 +29,7 @@ function Item(props) {
                 {props.currentPlayId === val.id ? <i className="iconfont icon-icon-5"></i> : i + 1}
             </div>
             <div className="r borderBot">
-                <p className="ellipsis">{val.name}</p>
+                <p>{val.name}</p>
                 <span>{val.artists}</span>
             </div>
         </li>);
