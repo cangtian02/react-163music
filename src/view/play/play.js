@@ -3,7 +3,7 @@ import { musicUrl, musicLyric } from '../../common/api';
 import { getRandom, parseLyric } from '../../common/utils';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { setCurrentPlayIndex, setPlayListId, setPlayList, setCurrentPlayId } from '../../redux/actions/index';
+import { setPlayListId, setPlayList, setCurrentPlayId, setRefreshPlayList } from '../../redux/actions/index';
 import BotCtrl from './botCtrl/botCtrl';
 import ViewCtrl from './viewCtrl/viewCtrl';
 import ListCtrl from './listCtrl/listCtrl';
@@ -13,8 +13,8 @@ const mapStateToProps = state => {
     return {
         playListId: state.playListId,
         playList: state.playList,
-        currentPlayIndex: state.currentPlayIndex,
-        currentPlayId: state.currentPlayId
+        currentPlayId: state.currentPlayId,
+        refreshPlayList: state.refreshPlayList
     };
 }
 
@@ -22,8 +22,8 @@ const mapDispatchToProps = dispatch => {
     return bindActionCreators({
         setPlayListId,
         setPlayList,
-        setCurrentPlayIndex,
-        setCurrentPlayId
+        setCurrentPlayId,
+        setRefreshPlayList
     }, dispatch);
 }
 
@@ -40,24 +40,43 @@ class Play extends React.Component {
             currentTime: 0, // 歌曲当前播放时长单位s
             lyric: '',  // 歌词
             showListCtrl: false,  // 显示播放列表
+            deleteIndex: [],  // 播放列表中被删除掉的歌曲下标集合
         }
     }
 
     componentWillReceiveProps(nextProps) {
+        setTimeout(() => {
+            this.willReceiveProps(nextProps);
+        }, 20);
+    }
+
+    willReceiveProps(nextProps) {
         if (this.state.playListId === 0) this.createAudio();
-        
+
         if (this.state.playListId !== nextProps.playListId) {
             this.setState({
-                playListId: nextProps.playListId
+                playListId: nextProps.playListId,
+                deleteIndex: []
+            });
+        }
+
+        // 当播放列表刷新时
+        if (this.props.refreshPlayList) {
+            this.setState({
+                deleteIndex: []
             });
             setTimeout(() => {
-                this.setStateShowViewCtrl(true);
-            }, 100);
+                const { setRefreshPlayList } = this.props;
+                setRefreshPlayList(false);
+            }, 20);
         }
-        
-        setTimeout(() => {
-            if (this.props.playListId !== -1) this.init();
-        }, 20);
+
+        if (this.props.playListId !== -1) {
+            this.init();
+            setTimeout(() => {
+                this.setStateShowViewCtrl(true);
+            }, 180);
+        }
     }
 
     createAudio() {
@@ -71,7 +90,9 @@ class Play extends React.Component {
     }
 
     init() {
-        musicUrl(this.props.playList[this.props.currentPlayIndex].id).then(res => {
+        musicUrl(this.props.currentPlayId).then(res => {
+            if (res.data[0].url === undefined) return;
+
             this.audio().src = res.data[0].url;
             this.audioInit();
             this.getMusicLyric();
@@ -80,8 +101,9 @@ class Play extends React.Component {
 
     // 获取歌词
     getMusicLyric() {
-        musicLyric(this.props.playList[this.props.currentPlayIndex].id).then(res => {
+        musicLyric(this.props.currentPlayId).then(res => {
             if (res.lrc === undefined || res.lrc.lyric === undefined) return;
+
             this.setState({
                 lyric: parseLyric(res.lrc.lyric)
             });
@@ -89,6 +111,7 @@ class Play extends React.Component {
     }
 
     audioInit() {
+        // 设置播放状态为暂停
         this.setStatePaused(false);
 
         // 当音乐可以播放时
@@ -96,6 +119,7 @@ class Play extends React.Component {
             this.audioCanplay();
         }, false);
 
+        // 当歌曲时长变化时
         this.audio().addEventListener('durationchange', () => {
             this.setState({
                 duration: this.audio().duration
@@ -157,19 +181,17 @@ class Play extends React.Component {
         // 切换前先暂停播放条的定时器
         clearInterval(this.currentTimer);
 
-        const { setCurrentPlayIndex, setCurrentPlayId } = this.props;
+        const { setCurrentPlayId } = this.props;
 
         // 列表循环
         if (this.state.order === 0) {
-            let i = f === 1 ? this.getIndex(0) : this.getIndex(1);
-            setCurrentPlayIndex(i);
+            let i = f === 1 ? this.getSwitchIndex(0, this.getPlayIndex()) : this.getSwitchIndex(1, this.getPlayIndex());
             setCurrentPlayId(this.props.playList[i].id);
         }
 
         // 随机播放
         if (this.state.order === 1) {
-            let i = getRandom(this.props.currentPlayIndex, this.props.playList.length);
-            setCurrentPlayIndex(i);
+            let i = getRandom(this.getPlayIndex(), this.props.playList.length);
             setCurrentPlayId(this.props.playList[i].id);
         }
 
@@ -179,20 +201,34 @@ class Play extends React.Component {
                 this.audio().currentTime = 0;
                 this.audio().play();
             } else {
-                let i = f === 1 ? this.getIndex(0) : this.getIndex(1);
-                setCurrentPlayIndex(i);
+                let i = f === 1 ? this.getSwitchIndex(0, this.getPlayIndex()) : this.getSwitchIndex(1, this.getPlayIndex());
                 setCurrentPlayId(this.props.playList[i].id);
             }
         }
     }
 
     /**
-     * 获取下标
+     * 获取将要切换歌曲在列表中下标
+     * 如果计算的i出现在deleteIndex中，就将i作为当前下标递归再次计算
      * @param {number} f 0上一曲 1下一曲 
+     * @param {number} c 当前下标
      */
-    getIndex(f) {
-        let [cur, len] = [this.props.currentPlayIndex, this.props.playList.length - 1];
-        return f === 0 ? cur === 0 ? len : cur - 1 : cur === len ? 0 : cur + 1;
+    getSwitchIndex(f, c) {
+        let len = this.props.playList.length - 1;
+        let i = f === 0 ? c === 0 ? len : c - 1 : c === len ? 0 : c + 1;
+
+        if (this.state.deleteIndex.find((v) => v === i) !== undefined) {
+            return this.getSwitchIndex(f, i);
+        } else {
+            return i;
+        }
+    }
+
+    // 获取当前播放歌曲在播放列表中的下标
+    getPlayIndex() {
+        for (let i = 0, len = this.props.playList.length;i < len;i++) {
+            if (this.props.playList[i].id === this.props.currentPlayId) return i;
+        }
     }
 
     // 设置音乐播放与暂停
@@ -236,8 +272,7 @@ class Play extends React.Component {
     // 清空播放列表
     handleRemovePlayList() {
         // 清空重置数据
-        const { setCurrentPlayIndex, setPlayListId, setPlayList, setCurrentPlayId } = this.props;
-        setCurrentPlayIndex(-1);
+        const { setPlayListId, setPlayList, setCurrentPlayId } = this.props;
         setPlayListId(-1);
         setPlayList([]);
         setCurrentPlayId(0);
@@ -253,20 +288,22 @@ class Play extends React.Component {
     }
 
     // 切换播放固定位置音乐
-    handleSwitchCurrentPlayIndex(i) {
-        if (i === this.props.currentPlayIndex) return;
-        const { setCurrentPlayIndex, setCurrentPlayId } = this.props;
-        setCurrentPlayIndex(i);
+    handleSwitchPlay(i) {
+        if (this.props.playList[i].id === this.props.currentPlayId) return;
+
+        const { setCurrentPlayId } = this.props;
         setCurrentPlayId(this.props.playList[i].id);
     }
 
-    // 删除播放列表的某一项,此处只删除当前组件内props数据，不删除redux中的
+    /**
+     * 删除播放列表的某一项
+     * @param {number} i 将要删除掉的下标 
+     */
     handleDeleteList(i) {
-        if (this.props.playList[i].id === this.props.currentPlayId) {
-            this.props.playList.splice(i, 1);
+        this.setState({ deleteIndex: [...this.state.deleteIndex, i] });
+
+        if (this.props.playList[i].id === this.props.currentPlayId) {  // 当前正在播放的歌曲
             this.audioSwitch(2);
-        } else {
-            this.props.playList.splice(i, 1);
         }
     }
 
@@ -303,12 +340,12 @@ class Play extends React.Component {
                     />
                     <ListCtrl
                         data={this.props.playList} 
-                        currentPlayIndex={this.props.currentPlayIndex} 
+                        deleteIndex={this.state.deleteIndex} 
                         currentPlayId={this.props.currentPlayId}  
                         showListCtrl={this.state.showListCtrl} 
                         handleShowListCtrl={() => { this.setStateShowListCtrl(false) } } 
                         handleRemovePlayList={() => { this.handleRemovePlayList() }} 
-                        handleSwitchCurrentPlayIndex={(i) => { this.handleSwitchCurrentPlayIndex(i) }} 
+                        handleSwitchPlay={(i) => { this.handleSwitchPlay(i) }} 
                         handleDeleteList={(i) => { this.handleDeleteList(i) }}
                     />
                 </div>

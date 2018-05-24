@@ -28,3 +28,5 @@
     .m-listCtrl_box ul li .r{width: 2rem;text-align: center;color: #98999A;}
     .m-listCtrl_box ul li .r .iconfont{font-size: .6rem;}
     .m-listCtrl_box ul li.active .l{color: #E4463B;}
+    .m-listCtrl_box ul li.hide{display: none;}
+    

@@ -2,12 +2,12 @@ import React from 'react';
 import Loading from '../../../components/loading/loading';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { setPlayListId, setPlayList, setCurrentPlayIndex, setCurrentPlayId } from '../../../redux/actions/index';
+import { setPlayListId, setPlayList, setCurrentPlayId, setRefreshPlayList } from '../../../redux/actions/index';
 import './list.css';
 
 const mapStateToProps = state => {
-    return { 
-        currentPlayIndex: state.currentPlayIndex,
+    return {
+        reduxPlayListId: state.playListId,
         currentPlayId: state.currentPlayId
     };
 }
@@ -16,8 +16,8 @@ const mapDispatchToProps = dispatch => {
     return bindActionCreators({
         setPlayListId,
         setPlayList,
-        setCurrentPlayIndex,
-        setCurrentPlayId
+        setCurrentPlayId,
+        setRefreshPlayList
     }, dispatch);
 }
 
@@ -40,16 +40,20 @@ function Item(props) {
 class List extends React.Component {
 
     handleClick(i) {
-        const { setPlayListId, setPlayList, setCurrentPlayIndex, setCurrentPlayId } = this.props;
+        if (this.props.list.length === 0) return;
+        if (this.props.playListId === this.props.reduxPlayListId && this.props.list[i].id === this.props.currentPlayId) return;
+
+        const { setPlayListId, setPlayList, setCurrentPlayId, setRefreshPlayList } = this.props;
+        setRefreshPlayList(true);
         setPlayListId(this.props.playListId);
         setPlayList(this.props.list);
-        setCurrentPlayIndex(i);
         setCurrentPlayId(this.props.list[i].id);
     }
 
     render() {
         let loading = '';
         if (this.props.list.length === 0) loading = <Loading />;
+
         return (
             <div className="m-ld-list">
                 <div className="m-ld-list_header borderBot" onClick={() => this.handleClick(0)}>
@@ -58,7 +62,11 @@ class List extends React.Component {
                 </div>
                 <ul className="m-ld-list_list">
                     {loading}
-                    <Item list={this.props.list} currentPlayId={this.props.currentPlayId} onClick={(i) => { this.handleClick(i)}} />
+                    <Item 
+                        list={this.props.list} 
+                        currentPlayId={this.props.currentPlayId} 
+                        onClick={(i) => this.handleClick(i)} 
+                    />
                 </ul>
             </div>
         );

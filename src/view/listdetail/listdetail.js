@@ -24,7 +24,6 @@ class ListDetail extends React.Component {
     getDetail() {
         playlistDetail(this.props.match.params.id).then(res => {
             res = res.result;
-            // console.log(res);
 
             let datail = {
                 name: res.name,

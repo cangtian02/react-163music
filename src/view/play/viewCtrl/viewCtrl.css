@@ -2,7 +2,7 @@
     .m-viewCtrl .bg, .m-viewCtrl .box{position: absolute;left: 0;top: 0;right: 0;bottom: 0;}
     .m-viewCtrl .bg{z-index: 1;}
     .m-viewCtrl .box{z-index: 2;}
-    .m-viewCtrl .bg img{display: block;width: 120%;height: 120%;margin: -10%;filter: blur(30px);}
+    .m-viewCtrl .bg img{display: block;width: 150%;height: 150%;margin: -25%;filter: blur(30px);}
     .m-viewCtrl .bg::after{content: '';position: absolute;left: 0;top: 0;right: 0;bottom: 0;background: rgba(110, 110, 110, .5);}
 
 .m-viewCtrl.m-viewCtrl_show{opacity: 1;transition-duration: 300ms;transform: translate3d(0%,0%, 0);}
