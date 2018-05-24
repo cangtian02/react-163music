@@ -19,9 +19,10 @@
     .m-listCtrl_box .t p{flex: 1;font-size: .8rem;font-weight: bold;}
     .m-listCtrl_box .t p span{color: #98999A;font-size: .7rem;}
     .m-listCtrl_box .t .r{width: 2rem;text-align: center;color: #98999A;}
+    .m-listCtrl_box .t .r .iconfont{font-size: 1rem;}
 
 .m-listCtrl_box ul{max-height: 15rem;overflow: auto;}
-    .m-listCtrl_box ul li{display: flex;padding: 0 .5rem;line-height: 2rem;}
+    .m-listCtrl_box ul li{display: flex;padding: .5rem;line-height: 1.2rem;}
     .m-listCtrl_box ul li .l{flex: 1;overflow: hidden;}
     .m-listCtrl_box ul li .l span{font-size: .6rem;color: #98999A;}
     .m-listCtrl_box ul li .r{width: 2rem;text-align: center;color: #98999A;}
