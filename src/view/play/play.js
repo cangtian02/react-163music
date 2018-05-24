@@ -281,6 +281,7 @@ class Play extends React.Component {
             this.setStateShowViewCtrl(false);
             this.setStateShowListCtrl(false);
         }, 20);
+        this.setState({ deleteIndex: [] });
 
         // 停止播放清除audio标签
         this.audio().pause();
@@ -300,10 +301,14 @@ class Play extends React.Component {
      * @param {number} i 将要删除掉的下标 
      */
     handleDeleteList(i) {
-        this.setState({ deleteIndex: [...this.state.deleteIndex, i] });
+        if (this.deleteIndex.length === this.props.playList.length - 1) {
+            this.handleRemovePlayList();
+        } else {
+            this.setState({ deleteIndex: [...this.state.deleteIndex, i] });
 
-        if (this.props.playList[i].id === this.props.currentPlayId) {  // 当前正在播放的歌曲
-            this.audioSwitch(2);
+            if (this.props.playList[i].id === this.props.currentPlayId) {  // 当前正在播放的歌曲
+                this.audioSwitch(2);
+            }
         }
     }
 
