@@ -33,6 +33,11 @@ const Toplist = Loadable({
     loading: LoadingComponents
 });
 
+const Toplistdetail = Loadable({
+    loader: () => import('../view/toplistdetail/toplistdetail'),
+    loading: LoadingComponents
+});
+
 const Search = Loadable({
     loader: () => import('../view/search/search'),
     loading: LoadingComponents
@@ -46,6 +51,10 @@ export const routes = [
     {
         path: '/toplist',
         component: Toplist
+    },
+    {
+        path: '/toplistdetail/:id',
+        component: Toplistdetail
     },
     {
         path: '/playlist',

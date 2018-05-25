@@ -93,3 +93,14 @@ export function searchHot() {
     });
 }
 
+/**
+ * 排行榜详情
+* @param {number} idx 对象key
+ */
+export function topList(idx) {
+    return new Promise((resolve, reject) => {
+        fetch('top/list?idx=' + idx).then(res => {
+            resolve(res);
+        });
+    });
+}

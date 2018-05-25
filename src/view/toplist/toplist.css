@@ -1,0 +1,7 @@
+.m-toplist{padding: .5rem 0;}
+    .m-toplist li{height: 6rem;margin-bottom: .25rem;padding-left: .25rem;}
+    .m-toplist li a{display: flex;}
+    .m-toplist li .l{width: 6rem;}
+    .m-toplist li .l img{display: block;width: 100%;height: 100%;border-radius: .25rem;}
+    .m-toplist li .r{flex: 1;padding-left: .75rem;overflow: hidden;}
+    .m-toplist li .r ol{line-height: 2rem;color: #646565;}

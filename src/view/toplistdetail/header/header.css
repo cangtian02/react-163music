@@ -1,0 +1,4 @@
+.m-tld-header{display: flex;height: 2.5rem;line-height: 2.5rem;color: #fff;}
+    .m-tld-header .l{flex: 1;font-size: .8rem;}
+    .m-tld-header .r{width: 2.4rem;text-align: center;}
+    .m-tld-header .r .iconfont{font-size: 1.2rem;}
