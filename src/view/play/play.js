@@ -33,8 +33,10 @@ class Play extends React.Component {
         super();
         this.state = {
             playListId: 0,  // 歌单id
+            songId: 0,  // 歌曲id
             paused: true,  // 播放状态 true播放  false暂停
             order: 0,  // 播放顺序 0列表循环 1随机播放 2单曲循环
+            isFirstShowViewCtrl: false,  // 是否首次显示过播放控制页面
             showViewCtrl: false,  // 显示播放控制页面
             duration: 0,  // 歌曲时长单位s
             currentTime: 0, // 歌曲当前播放时长单位s
@@ -51,8 +53,8 @@ class Play extends React.Component {
     }
 
     willReceiveProps(nextProps) {
-        if (this.state.playListId === 0) this.createAudio();
-
+        if (this.props.playList.length > 0 && this.audio() === null) this.createAudio();
+        
         if (this.state.playListId !== nextProps.playListId) {
             this.setState({
                 playListId: nextProps.playListId,
@@ -72,9 +74,22 @@ class Play extends React.Component {
         }
 
         if (this.props.playListId !== -1) {
+            if (this.state.playListId === '' || nextProps.playListId === '') return; 
+            if (this.state.playListId === nextProps.playListId && this.state.songId === nextProps.currentPlayId) return;
+
+            this.setState({
+                songId: nextProps.currentPlayId
+            });
+            
             this.init();
+
             setTimeout(() => {
-                this.setStateShowViewCtrl(true);
+                if (!this.state.isFirstShowViewCtrl) {
+                    this.setStateShowViewCtrl(true);
+                    this.setState({
+                        isFirstShowViewCtrl: true
+                    });
+                }
             }, 180);
         }
     }
@@ -141,10 +156,10 @@ class Play extends React.Component {
             this.audioPaused(1);
         }, false);
 
-        // 当音乐停止时
-        this.audio().addEventListener('ended', () => {
-            this.audioSwitch(0);
-        }, false);
+        // 当音乐停止时,,,,,,,采用此方法，自动下一曲逻辑错乱，故采用currentTime与duration对比，相等时就代表播放完毕，就进入歌曲切换
+        // this.audio().addEventListener('ended', () => {
+        //     this.audioSwitch(0);
+        // }, false);
     }
 
     // 歌曲可以播放后处理相关
@@ -166,6 +181,10 @@ class Play extends React.Component {
         if (f === 1) {
             this.currentTimer = null;
             this.currentTimer = setInterval(() => {
+                // currentTime与duration对比，相等时就代表播放完毕，就进入歌曲切换
+                if (Math.floor(this.state.currentTime) >= Math.floor(this.state.duration)) {
+                    this.audioSwitch(0);
+                }
                 this.setState({
                     currentTime: this.state.currentTime + 1
                 });
@@ -185,26 +204,39 @@ class Play extends React.Component {
 
         // 列表循环
         if (this.state.order === 0) {
-            let i = f === 1 ? this.getSwitchIndex(0, this.getPlayIndex()) : this.getSwitchIndex(1, this.getPlayIndex());
-            setCurrentPlayId(this.props.playList[i].id);
-        }
-
-        // 随机播放
-        if (this.state.order === 1) {
-            let i = getRandom(this.getPlayIndex(), this.props.playList.length);
-            setCurrentPlayId(this.props.playList[i].id);
-        }
-
-        // 单曲循环
-        if (this.state.order === 2) {
-            if (f === 0) {
-                this.audio().currentTime = 0;
-                this.audio().play();
+            if (this.props.playList.length === 1 && f === 0) {
+                this.loadAudio();
             } else {
                 let i = f === 1 ? this.getSwitchIndex(0, this.getPlayIndex()) : this.getSwitchIndex(1, this.getPlayIndex());
                 setCurrentPlayId(this.props.playList[i].id);
             }
         }
+
+        // 随机播放
+        if (this.state.order === 1) {
+            if (this.props.playList.length === 1 && f === 0) {
+                this.loadAudio();
+            } else {
+                let i = getRandom(this.getPlayIndex(), this.props.playList.length);
+                setCurrentPlayId(this.props.playList[i].id);
+            }
+        }
+
+        // 单曲循环
+        if (this.state.order === 2) {
+            if (f === 0) {
+                this.loadAudio();
+            } else {
+                let i = f === 1 ? this.getSwitchIndex(0, this.getPlayIndex()) : this.getSwitchIndex(1, this.getPlayIndex());
+                setCurrentPlayId(this.props.playList[i].id);
+            }
+        }
+    }
+
+    // 重载音频
+    loadAudio() {
+        this.audio().currentTime = 0;
+        this.audio().play();
     }
 
     /**
@@ -226,9 +258,13 @@ class Play extends React.Component {
 
     // 获取当前播放歌曲在播放列表中的下标
     getPlayIndex() {
+        let num;
         for (let i = 0, len = this.props.playList.length;i < len;i++) {
-            if (this.props.playList[i].id === this.props.currentPlayId) return i;
+            if (this.props.playList[i].id === this.props.currentPlayId) {
+                num = i;
+            }
         }
+        return num;
     }
 
     // 设置音乐播放与暂停
@@ -277,14 +313,17 @@ class Play extends React.Component {
         setPlayList([]);
         setCurrentPlayId(0);
         setTimeout(() => {
-            this.setState({ playListId: 0 });
+            this.setState({ 
+                playListId: 0, 
+                songId: 0, 
+                deleteIndex: [] 
+            });
             this.setStateShowViewCtrl(false);
             this.setStateShowListCtrl(false);
         }, 20);
-        this.setState({ deleteIndex: [] });
 
         // 停止播放清除audio标签
-        this.audio().pause();
+        this.handlePaused();
         this.audio().remove();
     }
 
@@ -301,7 +340,7 @@ class Play extends React.Component {
      * @param {number} i 将要删除掉的下标 
      */
     handleDeleteList(i) {
-        if (this.deleteIndex.length === this.props.playList.length - 1) {
+        if (this.state.deleteIndex.length === this.props.playList.length - 1) {
             this.handleRemovePlayList();
         } else {
             this.setState({ deleteIndex: [...this.state.deleteIndex, i] });

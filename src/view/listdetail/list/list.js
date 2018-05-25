@@ -44,10 +44,10 @@ class List extends React.Component {
         if (this.props.playListId === this.props.reduxPlayListId && this.props.list[i].id === this.props.currentPlayId) return;
 
         const { setPlayListId, setPlayList, setCurrentPlayId, setRefreshPlayList } = this.props;
-        setRefreshPlayList(true);
-        setPlayListId(this.props.playListId);
-        setPlayList(this.props.list);
         setCurrentPlayId(this.props.list[i].id);
+        setPlayList(this.props.list);
+        setPlayListId(this.props.playListId);
+        setRefreshPlayList(true);
     }
 
     render() {

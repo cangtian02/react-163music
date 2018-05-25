@@ -47,6 +47,18 @@ export function musicUrl(id) {
 }
 
 /**
+ * 歌曲详情
+ * @param {id} id 歌曲id
+ */
+export function songDetail(id) {
+    return new Promise((resolve, reject) => {
+        fetch('song/detail?ids=' + id).then(res => {
+            resolve(res);
+        });
+    });
+}
+
+/**
  * 歌词
  * @param {number} id 歌曲id
  */
@@ -57,3 +69,27 @@ export function musicLyric(id) {
         });
     });
 }
+
+/**
+ * 模糊搜索
+ * @param {string} keywords 关键词
+ */
+export function search(keywords) {
+    return new Promise((resolve, reject) => {
+        fetch('search?keywords=' + keywords).then(res => {
+            resolve(res);
+        });
+    });
+}
+
+/**
+ * 热搜
+ */
+export function searchHot() {
+    return new Promise((resolve, reject) => {
+        fetch('search/hot').then(res => {
+            resolve(res);
+        });
+    });
+}
+

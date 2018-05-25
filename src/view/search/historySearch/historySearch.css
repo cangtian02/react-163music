@@ -1,0 +1,5 @@
+.m-search-history ul{padding-left: .5rem;}
+    .m-search-history li{display: flex;height: 2.5rem;line-height: 2.5rem;padding-left: .25rem;}
+    .m-search-history li .l{flex: 1;}
+    .m-search-history li .r{width: 2.5rem;text-align: center;color: #7F8081;}
+    .m-search-history li .r .iconfont{font-size: .6rem;}

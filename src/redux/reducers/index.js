@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux';
 import { SET_PLAYLISTID, SET_PLAYLIST, SET_CURRENTPLAYID, SET_REFRESHPLAYLIST } from './../actions/index';
 
-const playListId = (state = [], action) => {
+const playListId = (state = -1, action) => {
     switch (action.type) {
         case SET_PLAYLISTID:
             return action.playListId;

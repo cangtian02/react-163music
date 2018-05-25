@@ -1,0 +1,2 @@
+.m-search-hot ul{display: flex;flex-wrap: wrap;padding: 0 .5rem;}
+    .m-search-hot li{line-height: 1.6rem;padding: 0 .5rem;margin: 0 .75rem .5rem 0;border: 1px solid #DBDDDE;border-radius: 1.6rem;}

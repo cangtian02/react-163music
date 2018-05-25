@@ -1,0 +1,4 @@
+.m-search-list{position: absolute;left: 0;top: 0;right: 0;z-index: 2;background: #F2F4F5;}
+    .m-search-list li{padding: .5rem 0 .5rem .5rem;}
+    .m-search-list li .t{line-height: .8rem;font-size: .8rem;margin-bottom: .5rem;}
+    .m-search-list li .b{color: #98999A;line-height: .6rem;}

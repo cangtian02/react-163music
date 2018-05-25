@@ -5,6 +5,7 @@ class BotCtrl extends React.Component {
     render() {
         let playItem = this.props.playItem;
         let pausedClass = this.props.paused ? 'icon-icon-7' : 'icon-icon-3';
+        
         return (
             <div className="m-botCtrl">
                 <div className="l" onClick={() => { this.props.handleShowViewCtrl() }}>
