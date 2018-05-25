@@ -1,6 +1,3 @@
-.m-search-header{display: flex;height: 2.5rem;position: absolute;left: 0;top: 0;right: 0;z-index: 2;}
-    .m-search-header .l{width: 2.4rem;text-align: center;line-height: 2.5rem;color: #fff;}
-    .m-search-header .l .iconfont{font-size: 1rem;}
-    .m-search-header .r{flex: 1;padding: .5rem 1rem .5rem .25rem;}
-    .m-search-header .r input{width: 100%;height: 1.5rem;line-height: 1.5rem;background: none;border-bottom: 1px solid #F3B3AF;font-size: .7rem;color: #fff;}
-    .m-search-header .r input::placeholder{color: #F2817C;}
+.m-search-header{padding: .5rem 1rem .5rem .25rem;}
+    .m-search-header input{width: 100%;height: 1.5rem;line-height: 1.5rem;background: none;border-bottom: 1px solid #F3B3AF;font-size: .7rem;color: #fff;}
+    .m-search-header input::placeholder{color: #F2817C;}

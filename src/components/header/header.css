@@ -1,0 +1,4 @@
+.g-header{display: flex;height: 2.5rem;position: absolute;left: 0;top: 0;right: 0;z-index: 2;}
+    .g-header .g-header-l{width: 2.4rem;text-align: center;line-height: 2.5rem;color: #fff;}
+    .g-header .g-header-l .iconfont{font-size: 1rem;}
+    .g-header .g-header-r{flex: 1;}
