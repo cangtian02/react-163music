@@ -1,0 +1,10 @@
+.m-item{display: flex;padding-left: .5rem;line-height: 2.5rem;background: #fff;}
+	.m-item .l{flex: 1;}
+	.m-item .l .b{font-size: .8rem;}
+	.m-item .l .s{color: #9a9a9a;}
+	.m-item .r{padding: 0 .75rem;color: #E4463B;font-size: .7rem;}
+
+.m-history-list{background: #F2F4F5;}
+    .m-history-list li{padding: .5rem 0 .5rem .5rem;}
+    .m-history-list li .t{line-height: .8rem;font-size: .8rem;margin-bottom: .5rem;}
+    .m-history-list li .b{color: #98999A;line-height: .6rem;}
