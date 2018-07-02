@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { topList } from '../../common/api';
 import { artists } from '../../common/utils';
 import Nav from '../../components/nav/nav';
+import Loading from '../../components/loading/loading';
 import './toplist.css';
 
 function Item(props) {
@@ -13,7 +14,7 @@ function Item(props) {
             if (j < 3) arr[i].push(<ol key={j} className="ellipsis">{j + 1}.{v.name}-{v.artists}</ol>);
         });
     });
-    
+
     let dom = [];
     props.list.forEach((val, i) => {
         let link = '/toplistdetail/' + val.id;
@@ -39,37 +40,40 @@ class Toplist extends React.Component {
             list: [
                 {
                     id: 0,
-                    pic: require('../../assets/img/top_list_1.jpg'),
+                    pic: '',
                     list: []
                 },
                 {
                     id: 1,
-                    pic: require('../../assets/img/top_list_2.jpg'),
+                    pic: '',
                     list: []
                 },
                 {
                     id: 2,
-                    pic: require('../../assets/img/top_list_3.jpg'),
+                    pic: '',
                     list: []
                 },
                 {
                     id: 3,
-                    pic: require('../../assets/img/top_list_4.jpg'),
+                    pic: '',
                     list: []
                 },
                 {
                     id: 4,
-                    pic: require('../../assets/img/top_list_5.jpg'),
+                    pic: '',
                     list: []
                 },
-            ]
+            ],
+            toggleView: false,
         }
     }
 
     componentDidMount() {
-        let arr = this.state.list;
+        let arr = this.state.list,
+            len = 0;
         arr.forEach((val, i) => {
             topList(val.id).then(res => {
+                arr[i].pic = res.playlist.coverImgUrl;
                 res = res.playlist.tracks;
                 res.forEach((v, j) => {
                     arr[i].list.push({
@@ -77,7 +81,13 @@ class Toplist extends React.Component {
                         artists: artists(v.ar)
                     });
                 });
-                this.setState({ list: arr });
+                len++;
+                if (len === arr.length) {
+                    this.setState({
+                        list: arr,
+                        toggleView: true,
+                    });
+                }
             });
         });
     }
@@ -87,7 +97,7 @@ class Toplist extends React.Component {
             <div className="warp">
                 <Nav />
                 <div className="content m-toplist">
-                    <Item list={this.state.list}/>
+                    {this.state.toggleView ? <Item list={this.state.list}/> : <Loading />}
                 </div>
             </div>
         );

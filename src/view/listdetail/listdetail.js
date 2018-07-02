@@ -3,7 +3,7 @@ import { artists } from '../../common/utils';
 import { playlistDetail } from '../../common/api';
 import Header from './header/header';
 import Detail from './detail/detail';
-import List from './list/list';
+import List from '../../components/musicList/musicList';
 import './listdetail.css';
 
 class ListDetail extends React.Component {
@@ -33,7 +33,7 @@ class ListDetail extends React.Component {
                 creator_pic: res.creator.backgroundUrl,
                 tags: res.tags.join('/')
             };
-            
+
             let list = [];
             res.tracks.forEach(val => {
                 list.push({

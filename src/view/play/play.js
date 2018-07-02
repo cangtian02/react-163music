@@ -32,17 +32,17 @@ class Play extends React.Component {
     constructor() {
         super();
         this.state = {
-            playListId: 0,  // 歌单id
-            songId: 0,  // 歌曲id
-            paused: true,  // 播放状态 true播放  false暂停
-            order: 0,  // 播放顺序 0列表循环 1随机播放 2单曲循环
-            isFirstShowViewCtrl: false,  // 是否首次显示过播放控制页面
-            showViewCtrl: false,  // 显示播放控制页面
-            duration: 0,  // 歌曲时长单位s
+            playListId: 0, // 歌单id
+            songId: 0, // 歌曲id
+            paused: true, // 播放状态 true播放  false暂停
+            order: 0, // 播放顺序 0列表循环 1随机播放 2单曲循环
+            isFirstShowViewCtrl: false, // 是否首次显示过播放控制页面
+            showViewCtrl: false, // 显示播放控制页面
+            duration: 0, // 歌曲时长单位s
             currentTime: 0, // 歌曲当前播放时长单位s
-            lyric: '',  // 歌词
-            showListCtrl: false,  // 显示播放列表
-            deleteIndex: [],  // 播放列表中被删除掉的歌曲下标集合
+            lyric: '', // 歌词
+            showListCtrl: false, // 显示播放列表
+            deleteIndex: [], // 播放列表中被删除掉的歌曲下标集合
         }
     }
 
@@ -54,7 +54,7 @@ class Play extends React.Component {
 
     willReceiveProps(nextProps) {
         if (this.props.playList.length > 0 && this.audio() === null) this.createAudio();
-        
+
         if (this.state.playListId !== nextProps.playListId) {
             this.setState({
                 playListId: nextProps.playListId,
@@ -68,19 +68,19 @@ class Play extends React.Component {
                 deleteIndex: []
             });
             setTimeout(() => {
-                const { setRefreshPlayList } = this.props;
+                const {setRefreshPlayList} = this.props;
                 setRefreshPlayList(false);
             }, 20);
         }
 
         if (this.props.playListId !== -1) {
-            if (this.state.playListId === '' || nextProps.playListId === '') return; 
+            if (this.state.playListId === '' || nextProps.playListId === '') return;
             if (this.state.playListId === nextProps.playListId && this.state.songId === nextProps.currentPlayId) return;
 
             this.setState({
                 songId: nextProps.currentPlayId
             });
-            
+
             this.init();
 
             setTimeout(() => {
@@ -111,17 +111,49 @@ class Play extends React.Component {
             this.audio().src = res.data[0].url;
             this.audioInit();
             this.getMusicLyric();
+            this.handlePlayHistory();
         });
+    }
+
+    // 记录播放历史到缓存
+    handlePlayHistory() {
+        let list = window.localStorage.getItem('163MusicPlayHistoryList');
+
+        if (list === null) {
+            window.localStorage.setItem('163MusicPlayHistoryList', JSON.stringify([this.props.playList[this.getPlayIndex()]]));
+        } else {
+            list = JSON.parse(list);
+            if (list.find(v => v.id === this.props.currentPlayId) === undefined) {
+                // 缓存内没有此歌曲
+                list.unshift(this.props.playList[this.getPlayIndex()]);
+                // 最多缓存50首
+                if (list.length > 50) list.splice(50, list.length);
+                window.localStorage.setItem('163MusicPlayHistoryList', JSON.stringify(list));
+            } else {
+                // 缓存内有此歌曲并且不处于第一位时就把这首歌曲挪到第一位
+                let i = 0;
+                list.forEach((v, j) => {
+                    if (v.id === this.props.currentPlayId)
+                        i = j;
+                });
+                if (i > 0) {
+                    let s = list[i];
+                    list.splice(i, 1);
+                    list.unshift(s);
+                    window.localStorage.setItem('163MusicPlayHistoryList', JSON.stringify(list));
+                }
+            }
+        }
     }
 
     // 获取歌词
     getMusicLyric() {
         musicLyric(this.props.currentPlayId).then(res => {
-            if (res.lrc === undefined || res.lrc.lyric === undefined) return;
-
-            this.setState({
-                lyric: parseLyric(res.lrc.lyric)
-            });
+            if (res.lrc !== undefined || res.lrc.lyric !== undefined) {
+                this.setState({
+                    lyric: parseLyric(res.lrc.lyric)
+                });
+            }
         });
     }
 
@@ -156,17 +188,17 @@ class Play extends React.Component {
             this.audioPaused(1);
         }, false);
 
-        // 当音乐停止时,,,,,,,采用此方法，自动下一曲逻辑错乱，故采用currentTime与duration对比，相等时就代表播放完毕，就进入歌曲切换
-        // this.audio().addEventListener('ended', () => {
-        //     this.audioSwitch(0);
-        // }, false);
+    // 当音乐停止时,,,,,,,采用此方法，自动下一曲逻辑错乱，故采用currentTime与duration对比，相等或大于时就代表播放完毕，就进入歌曲切换
+    // this.audio().addEventListener('ended', () => {
+    //     this.audioSwitch(0);
+    // }, false);
     }
 
     // 歌曲可以播放后处理相关
     audioCanplay() {
         this.audio().play();
         this.setStatePaused(true);
-        this.setState({ 
+        this.setState({
             currentTime: this.audio().currentTime,
             duration: this.audio().duration
         });
@@ -181,7 +213,7 @@ class Play extends React.Component {
         if (f === 1) {
             this.currentTimer = null;
             this.currentTimer = setInterval(() => {
-                // currentTime与duration对比，相等时就代表播放完毕，就进入歌曲切换
+                // currentTime与duration对比，相等或大于时就代表播放完毕，就进入歌曲切换
                 if (Math.floor(this.state.currentTime) >= Math.floor(this.state.duration)) {
                     this.audioSwitch(0);
                 }
@@ -200,7 +232,7 @@ class Play extends React.Component {
         // 切换前先暂停播放条的定时器
         clearInterval(this.currentTimer);
 
-        const { setCurrentPlayId } = this.props;
+        const {setCurrentPlayId} = this.props;
 
         // 列表循环
         if (this.state.order === 0) {
@@ -259,7 +291,7 @@ class Play extends React.Component {
     // 获取当前播放歌曲在播放列表中的下标
     getPlayIndex() {
         let num;
-        for (let i = 0, len = this.props.playList.length;i < len;i++) {
+        for (let i = 0, len = this.props.playList.length; i < len; i++) {
             if (this.props.playList[i].id === this.props.currentPlayId) {
                 num = i;
             }
@@ -276,7 +308,9 @@ class Play extends React.Component {
     // 设置播放顺序
     handleOrder() {
         let order = this.state.order === 0 ? 1 : this.state.order === 1 ? 2 : 0;
-        this.setState({ order: order });
+        this.setState({
+            order: order
+        });
     }
 
     /**
@@ -292,31 +326,37 @@ class Play extends React.Component {
 
     // 设置播放状态  播放or暂停
     setStatePaused(f) {
-        this.setState({ paused: f });
+        this.setState({
+            paused: f
+        });
     }
 
     // 设置是否显示控制页面
     setStateShowViewCtrl(f) {
-        this.setState({ showViewCtrl: f });
+        this.setState({
+            showViewCtrl: f
+        });
     }
 
     // 设置是否显示播放列表
     setStateShowListCtrl(f) {
-        this.setState({ showListCtrl: f });
+        this.setState({
+            showListCtrl: f
+        });
     }
 
     // 清空播放列表
     handleRemovePlayList() {
         // 清空重置数据
-        const { setPlayListId, setPlayList, setCurrentPlayId } = this.props;
+        const {setPlayListId, setPlayList, setCurrentPlayId} = this.props;
         setPlayListId(-1);
         setPlayList([]);
         setCurrentPlayId(0);
         setTimeout(() => {
-            this.setState({ 
-                playListId: 0, 
-                songId: 0, 
-                deleteIndex: [] 
+            this.setState({
+                playListId: 0,
+                songId: 0,
+                deleteIndex: []
             });
             this.setStateShowViewCtrl(false);
             this.setStateShowListCtrl(false);
@@ -331,7 +371,7 @@ class Play extends React.Component {
     handleSwitchPlay(i) {
         if (this.props.playList[i].id === this.props.currentPlayId) return;
 
-        const { setCurrentPlayId } = this.props;
+        const {setCurrentPlayId} = this.props;
         setCurrentPlayId(this.props.playList[i].id);
     }
 
@@ -343,9 +383,11 @@ class Play extends React.Component {
         if (this.state.deleteIndex.length === this.props.playList.length - 1) {
             this.handleRemovePlayList();
         } else {
-            this.setState({ deleteIndex: [...this.state.deleteIndex, i] });
+            this.setState({
+                deleteIndex: [...this.state.deleteIndex, i]
+            });
 
-            if (this.props.playList[i].id === this.props.currentPlayId) {  // 当前正在播放的歌曲
+            if (this.props.playList[i].id === this.props.currentPlayId) { // 当前正在播放的歌曲
                 this.audioSwitch(2);
             }
         }
@@ -356,42 +398,72 @@ class Play extends React.Component {
             return (<div></div>);
         } else {
             let playList = this.props.playList;
-            let playItem = playList.find(val => { return val.id === this.props.currentPlayId });
+            let playItem = playList.find(val => {
+                return val.id === this.props.currentPlayId
+            });
             return (
                 <div className="m-playCtrl">
-                    <BotCtrl 
-                        playItem={playItem} 
-                        paused={this.state.paused} 
-                        handlePaused={() => { this.handlePaused() }} 
-                        handleShowViewCtrl={() => { this.setStateShowViewCtrl(true) }}
-                        handleShowListCtrl={() => { this.setStateShowListCtrl(true) }} 
-                    />
-                    <ViewCtrl 
-                        playItem={playItem} 
-                        paused={this.state.paused} 
-                        handlePaused={() => { this.handlePaused() }} 
-                        order={this.state.order} 
-                        handleOrder={() => { this.handleOrder() }}
-                        handlePrev={() => { this.audioSwitch(1) }} 
-                        handleNext={() => { this.audioSwitch(2) }} 
-                        showViewCtrl={this.state.showViewCtrl} 
-                        handleShowViewCtrl={() => { this.setStateShowViewCtrl(false) }} 
-                        duration={this.state.duration} 
-                        currentTime={this.state.currentTime} 
-                        handleCurrentTime={(t) => {this.handleCurrentTime(t) }} 
-                        lyric={this.state.lyric} 
-                        handleShowListCtrl={() => { this.setStateShowListCtrl(true) }} 
-                    />
+                    <BotCtrl
+                playItem={playItem}
+                paused={this.state.paused}
+                handlePaused={() => {
+                    this.handlePaused()
+                }}
+                handleShowViewCtrl={() => {
+                    this.setStateShowViewCtrl(true)
+                }}
+                handleShowListCtrl={() => {
+                    this.setStateShowListCtrl(true)
+                }}
+                />
+                    <ViewCtrl
+                playItem={playItem}
+                paused={this.state.paused}
+                handlePaused={() => {
+                    this.handlePaused()
+                }}
+                order={this.state.order}
+                handleOrder={() => {
+                    this.handleOrder()
+                }}
+                handlePrev={() => {
+                    this.audioSwitch(1)
+                }}
+                handleNext={() => {
+                    this.audioSwitch(2)
+                }}
+                showViewCtrl={this.state.showViewCtrl}
+                handleShowViewCtrl={() => {
+                    this.setStateShowViewCtrl(false)
+                }}
+                duration={this.state.duration}
+                currentTime={this.state.currentTime}
+                handleCurrentTime={(t) => {
+                    this.handleCurrentTime(t)
+                }}
+                lyric={this.state.lyric}
+                handleShowListCtrl={() => {
+                    this.setStateShowListCtrl(true)
+                }}
+                />
                     <ListCtrl
-                        data={this.props.playList} 
-                        deleteIndex={this.state.deleteIndex} 
-                        currentPlayId={this.props.currentPlayId}  
-                        showListCtrl={this.state.showListCtrl} 
-                        handleShowListCtrl={() => { this.setStateShowListCtrl(false) } } 
-                        handleRemovePlayList={() => { this.handleRemovePlayList() }} 
-                        handleSwitchPlay={(i) => { this.handleSwitchPlay(i) }} 
-                        handleDeleteList={(i) => { this.handleDeleteList(i) }}
-                    />
+                data={this.props.playList}
+                deleteIndex={this.state.deleteIndex}
+                currentPlayId={this.props.currentPlayId}
+                showListCtrl={this.state.showListCtrl}
+                handleShowListCtrl={() => {
+                    this.setStateShowListCtrl(false)
+                }}
+                handleRemovePlayList={() => {
+                    this.handleRemovePlayList()
+                }}
+                handleSwitchPlay={(i) => {
+                    this.handleSwitchPlay(i)
+                }}
+                handleDeleteList={(i) => {
+                    this.handleDeleteList(i)
+                }}
+                />
                 </div>
             );
         }
