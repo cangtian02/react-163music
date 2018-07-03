@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import './modal.css';
 
-let el;
+let el = null;
 
 class Modal extends React.Component {
 
@@ -25,12 +25,12 @@ class Modal extends React.Component {
 		}, 20);
 	}
 
-	onOkClick(props) {
+	handleOk(props) {
 		props.onOk();
 		this.close();
 	}
 
-	onCancelClick(props) {
+	handleCancel(props) {
 		props.onCancel();
 		this.close();
 	}
@@ -42,6 +42,7 @@ class Modal extends React.Component {
 		}, () => {
 			setTimeout(() => {
 				document.body.removeChild(el);
+				el = null;
 			}, this.hideTime);
 		});
 	}
@@ -56,8 +57,8 @@ class Modal extends React.Component {
 					<div className="m-modal-title">{title}</div>
 					<div className="m-modal-message">{message}</div>
 					<div className="m-modal-footer">
-						<div className="m-modal-btn" onClick={() => {this.onCancelClick(this.props)}}>{cancelText}</div>
-						<div className="m-modal-btn" onClick={() => {this.onOkClick(this.props)}}>{okText}</div>
+						<div className="m-modal-btn" onClick={() => this.handleCancel(this.props)}>{cancelText}</div>
+						<div className="m-modal-btn" onClick={() => this.handleOk(this.props)}>{okText}</div>
 					</div>
 				</div>
 			</div>,
