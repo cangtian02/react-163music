@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { setPlayListId, setPlayList, setCurrentPlayId, setRefreshPlayList } from '../../redux/actions/index';
 import './playlist.css';
+import modal from '../../components/modal/modal';
 
 const mapStateToProps = state => {
     return {
@@ -85,9 +86,14 @@ class Playlist extends React.Component {
     }
 
     handleRemove() {
-        window.localStorage.removeItem('163MusicPlayHistoryList');
-        this.setState({
-            list: []
+        modal({
+            message: '确定清空全部播放记录吗？',
+            onOk: () => {
+                window.localStorage.removeItem('163MusicPlayHistoryList');
+                this.setState({
+                    list: []
+                });
+            }
         });
     }
 
