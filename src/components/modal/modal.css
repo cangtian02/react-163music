@@ -1,0 +1,14 @@
+.m-modal, .m-modal-mask{position: fixed;left: 0;top: 0;right: 0;bottom: 0;}
+.m-modal{z-index: 99999;}
+.m-modal-mask{z-index: 1;background: #000;opacity: 0;transition-property: opacity;}
+.m-modal-body{width: 14rem;padding: .5rem;background: #fff;border-radius: .25rem;position: absolute;left: 50%;top: 50%;z-index: 2;transition-property: transform, opacity;transform: translate3d(-50%, -50%, 0) scale(.9);opacity: 0;}
+.m-modal-title{color: #343434;font-size: .8rem;line-height: 2rem;}
+.m-modal-message{padding-left: .75rem;color: #666;font-size: .7rem;line-height: 2rem;}
+.m-modal-footer{display: flex;justify-content: flex-end;}
+.m-modal-btn{padding: 0 .75rem;font-size: .7rem;color: #E4463B;line-height: 2rem;}
+
+.m-modal.m-modal-show .m-modal-body{transition-duration: 300ms;transform: translate3d(-50%, -50%, 0) scale(1);opacity: 1;}
+.m-modal.m-modal-show .m-modal-mask{opacity: .5;transition-duration: 300ms;}
+
+.m-modal.m-modal-hide .m-modal-body{transition-duration: 300ms;transform: translate3d(-50%, -50%, 0) scale(.9);opacity: 0;}
+.m-modal.m-modal-hide .m-modal-mask{opacity: 0;transition-duration: 500ms;}
