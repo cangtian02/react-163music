@@ -213,12 +213,13 @@ class Play extends React.Component {
         if (f === 1) {
             this.currentTimer = null;
             this.currentTimer = setInterval(() => {
-                // currentTime与duration对比，相等或大于时就代表播放完毕，就进入歌曲切换
-                if (Math.floor(this.state.currentTime) >= Math.floor(this.state.duration)) {
-                    this.audioSwitch(0);
-                }
                 this.setState({
                     currentTime: this.state.currentTime + 1
+                }, () => {
+                    // currentTime与duration对比，相等或大于时就代表播放完毕，就进入歌曲切换
+                    if (Math.floor(this.state.currentTime) >= Math.floor(this.state.duration)) {
+                        this.audioSwitch(0);
+                    }
                 });
             }, 1000);
         }
