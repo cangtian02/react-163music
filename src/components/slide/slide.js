@@ -40,7 +40,7 @@ class Slide extends React.Component {
     }
 
     componentWillUnmount() {
-        this.slide.destroy();
+        this.slide && this.slide.destroy();
         clearTimeout(this.timer);
     }
 
